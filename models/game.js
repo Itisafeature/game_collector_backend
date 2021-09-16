@@ -1,7 +1,8 @@
 'use strict';
 const { Model } = require('sequelize');
+const bcrypt = require('bcryptjs');
 module.exports = (sequelize, DataTypes) => {
-  class OwnedGame extends Model {
+  class Game extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,20 +12,19 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  OwnedGame.init(
+  Game.init(
     {
       title: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
-      purchasePrice: DataTypes.INTEGER,
-      game_id: DataTypes.INTEGER,
-      user_id: DataTypes.INTEGER,
+      currentPrice: DataTypes.INTEGER,
     },
     {
       sequelize,
-      modelName: 'OwnedGame',
+      modelName: 'Game',
     }
   );
-  return OwnedGame;
+  return Game;
 };
