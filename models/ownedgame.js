@@ -18,8 +18,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       purchasePrice: DataTypes.INTEGER,
-      game_id: DataTypes.INTEGER,
-      user_id: DataTypes.INTEGER,
+      game_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {
       sequelize,
