@@ -4,28 +4,11 @@ const { sequelize } = require('./models');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
-const sequelizeDB = async () => await sequelize.sync();
-sequelizeDB();
-
-const { User } = require('./models');
-
-const createUserFunc = async () => {
-  try {
-    console.log(
-      await User.create({
-        username: 'name',
-        email: 'email',
-        password: 'password',
-      })
-    );
-  } catch (err) {
-    console.log(err);
-  }
-};
-createUserFunc();
+(async () => await sequelize.sync())();
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
 
 const app = express();
 
@@ -35,6 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/', authRouter);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
