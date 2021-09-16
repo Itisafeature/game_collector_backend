@@ -18,11 +18,19 @@ const selectHandler = (err, req, res, next) => {
   err.status = err.status || 'error';
 
   let error = { ...err };
-  error.message = err.message;
+  error.message = err.message; // Not sure why it's not copied
 
   switch (err.name) {
     case 'SequelizeValidationError': {
       error = handleValidationError(err);
+      break;
+    }
+    case 'SequelizeUniqueConstraintError': {
+      error.message = `${error.errors[0].message.replace(
+        / .*/,
+        ''
+      )} already exists`;
+      handleValidationError(err);
       break;
     }
   }

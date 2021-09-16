@@ -18,20 +18,34 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          len: [6, 20],
+          notNull: {
+            msg: 'Must have a username between 6 and 20 characters',
+          },
+          len: {
+            args: [6, 20],
+            msg: 'Username must be between 6 and 20 characters',
+          },
         },
       },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          isEmail: true,
+          notNull: {
+            msg: 'Must have provide an email',
+          },
+          isEmail: {
+            msg: 'Must provide a valid email address',
+          },
         },
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
+          notNull: {
+            msg: 'Must have a password between 6 and 20 characters',
+          },
           len: {
             args: [6, 20],
             msg: 'Password must be between 6 and 20 characters',
