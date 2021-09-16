@@ -2,10 +2,37 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
+}
+
+model OwnedGame {
+  id     Int     @id @default(autoincrement())
+  bio    String?
+  purchasePrice Int
+  user   User    @relation(fields: [userId], references: [id])
+  userId Int     @unique
+  game   Game    @relation(fields: [gameId], references: [id])
+  gameId Int     @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  email   String   @unique
+  username    String?
+  passwordDigest String
+  ownedGames OwnedGame[]
+}
+
+model Game {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(255)
+  currentPrice Int
+  ownedGames OwnedGame[]
 }
