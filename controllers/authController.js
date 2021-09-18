@@ -1,13 +1,12 @@
 const { User } = require('../models');
+const errorWrapper = require('../utils/controllerErrorHandler');
 
-exports.createUser = async (req, res, next) => {
-  try {
-    const user = await User.create(req.body);
-    res.status(201).json({
-      status: 'success',
-      data: user,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
+const createUser = errorWrapper(async (req, res, next) => {
+  const user = await User.create(req.body.user);
+  res.status(201).json({
+    status: 'success',
+    data: user,
+  }); 
+});
+
+exports.createUser = createUser
