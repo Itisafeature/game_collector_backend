@@ -25,13 +25,18 @@ exports.verifyToken = errorWrapper(async (req, res, next) => {
   );
 });
 
-exports.createUser = errorWrapper(async (req, res, next) => {
-  const user = await User.create(req.body.user);
+const loginAndSendResponse = (res, statusCode, user) => {
   createAndAddToken(user, res);
-  res.status(201).json({
+  delete user.dataValues.password;
+  return res.status(statusCode).json({
     status: 'success',
     data: user,
   });
+};
+
+exports.createUser = errorWrapper(async (req, res, next) => {
+  const user = await User.create(req.body.user);
+  loginAndSendResponse(res, 201, user);
 });
 
 exports.loginUser = errorWrapper(async (req, res, next) => {
@@ -39,11 +44,7 @@ exports.loginUser = errorWrapper(async (req, res, next) => {
   if (user) {
     const auth = await bcrypt.compare(req.body.password, user.password);
     if (auth) {
-      createAndAddToken(user, res);
-      return res.status(200).json({
-        status: 'success',
-        data: user,
-      });
+      return loginAndSendResponse(res, 200, user);
     }
   }
   next(new AppError('Invalid Username or Password', 401));
