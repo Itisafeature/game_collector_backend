@@ -8,7 +8,7 @@ const handleValidationError = err => {
 
 const handleJsonWebTokenError = err => {
   const message = 'User is not authenticated';
-  return new AppError(message, 403);
+  return new AppError(message, 401);
 };
 
 const sendError = (err, req, res) => {
