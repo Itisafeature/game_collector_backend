@@ -20,6 +20,8 @@ const selectHandler = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message; // Not sure why it's not copied
 
+  console.log(err);
+
   switch (err.name) {
     case 'SequelizeValidationError': {
       error = handleValidationError(err);
