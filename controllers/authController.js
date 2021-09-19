@@ -4,12 +4,18 @@ const errorWrapper = require('../utils/controllerErrorHandler');
 
 const createAndAddToken = (user, res) => {
   const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: 3600,
+    expiresIn: 3600, // 10 min
   });
 
   res.cookie('access_token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
+  });
+};
+
+exports.verifyToken = (reqToken, next) => {
+  const token = jwt.verify(reqToken, process.env.JWT_SECRET, err => {
+    if (err) next(err);
   });
 };
 
