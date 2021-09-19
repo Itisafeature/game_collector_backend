@@ -13,11 +13,15 @@ const createAndAddToken = (user, res) => {
   });
 };
 
-exports.verifyToken = (reqToken, next) => {
-  const token = jwt.verify(reqToken, process.env.JWT_SECRET, err => {
-    if (err) next(err);
-  });
-};
+exports.verifyToken = errorWrapper(async (req, res, next) => {
+  const token = jwt.verify(
+    req.cookies.access_token,
+    process.env.JWT_SECRET,
+    err => {
+      if (err) next(err);
+    }
+  );
+});
 
 exports.createUser = errorWrapper(async (req, res, next) => {
   const user = await User.create(req.body.user);

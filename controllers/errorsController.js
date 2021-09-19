@@ -6,6 +6,11 @@ const handleValidationError = err => {
   return new AppError(message, 400);
 };
 
+const handleJsonWebTokenError = err => {
+  const message = 'User is not authenticated';
+  return new AppError(message, 403);
+};
+
 const sendError = (err, req, res) => {
   return res.status(err.statusCode).json({
     status: err.status,
@@ -20,8 +25,6 @@ const selectHandler = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message; // Not sure why it's not copied
 
-  console.log(err);
-
   switch (err.name) {
     case 'SequelizeValidationError': {
       error = handleValidationError(err);
@@ -32,7 +35,11 @@ const selectHandler = (err, req, res, next) => {
         / .*/,
         ''
       )} already exists`;
-      handleValidationError(err);
+      error = handleValidationError(err);
+      break;
+    }
+    case 'JsonWebTokenError': {
+      error = handleJsonWebTokenError(error);
       break;
     }
   }
