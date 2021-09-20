@@ -1,6 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
 const bcrypt = require('bcryptjs');
+const AppError = require('../utils/appError');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -58,6 +59,12 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'User',
     }
   );
+
+  User.addHook('beforeValidate', (user, options) => {
+    if (user.password !== options.passwordConfirmation) {
+      throw new AppError('Password Confirmation does not match Password', 400);
+    }
+  });
 
   User.addHook('beforeCreate', async (user, options) => {
     const hashedPassword = await bcrypt.hash(user.password, 10);

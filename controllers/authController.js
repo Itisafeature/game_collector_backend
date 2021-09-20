@@ -28,6 +28,7 @@ exports.verifyToken = errorWrapper(async (req, res, next) => {
 const loginAndSendResponse = (res, statusCode, user) => {
   createAndAddToken(user, res);
   delete user.dataValues.password;
+  delete user.dataValues.email;
   return res.status(statusCode).json({
     status: 'success',
     data: user,
@@ -35,7 +36,9 @@ const loginAndSendResponse = (res, statusCode, user) => {
 };
 
 exports.createUser = errorWrapper(async (req, res, next) => {
-  const user = await User.create(req.body.user);
+  const user = await User.create(req.body.user, {
+    passwordConfirmation: req.body.user.passwordConfirmation,
+  });
   loginAndSendResponse(res, 201, user);
 });
 
