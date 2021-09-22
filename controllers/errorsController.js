@@ -14,7 +14,7 @@ const handleJsonWebTokenError = err => {
 const sendError = (err, req, res) => {
   return res.status(err.statusCode).json({
     status: err.status,
-    msg: err.message,
+    errMsg: err.message,
   });
 };
 
