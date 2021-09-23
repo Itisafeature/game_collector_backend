@@ -31,12 +31,12 @@ app.use(function (req, res, next) {
 app.use('/', authRouter);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('*', (req, res, next) => {
-  res.status(404).json({
-    status: 'Not Found',
-    msg: 'Route Not Found',
-  });
-});
+// app.use('*', (req, res, next) => {
+//   res.status(404).json({
+//     status: 'Not Found',
+//     msg: 'Route Not Found',
+//   });
+// });
 app.use(GlobalErrorHandler);
 
 module.exports = app;
