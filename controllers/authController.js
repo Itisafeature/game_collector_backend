@@ -43,9 +43,9 @@ exports.createUser = errorWrapper(async (req, res, next) => {
 });
 
 exports.loginUser = errorWrapper(async (req, res, next) => {
-  const user = await User.findOne({ where: { email: req.body.email } });
+  const user = await User.findOne({ where: { email: req.body.user.email } });
   if (user) {
-    const auth = await bcrypt.compare(req.body.password, user.password);
+    const auth = await bcrypt.compare(req.body.user.password, user.password);
     if (auth) {
       return loginAndSendResponse(res, 200, user);
     }
