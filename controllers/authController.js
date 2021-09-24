@@ -6,7 +6,7 @@ const AppError = require('../utils/appError');
 
 const createAndAddToken = (user, res) => {
   const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: 3600, // 10 min
+    expiresIn: 360000, // 100 hours
   });
 
   res.cookie('access_token', token, {
@@ -23,6 +23,7 @@ exports.verifyToken = errorWrapper(async (req, res, next) => {
       if (err) next(err);
     }
   );
+  next();
 });
 
 const loginAndSendResponse = (res, statusCode, user) => {
@@ -34,6 +35,13 @@ const loginAndSendResponse = (res, statusCode, user) => {
     data: user,
   });
 };
+
+exports.tokenVerified = errorWrapper(async (req, res, next) => {
+  res.status(200).json({
+    status: 'success',
+    data: 'Token Verified',
+  });
+});
 
 exports.createUser = errorWrapper(async (req, res, next) => {
   const user = await User.create(req.body.user, {
