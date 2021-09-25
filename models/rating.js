@@ -30,5 +30,18 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'Rating',
     }
   );
+
+  Rating.addScope('defaultScope', {
+    attributes: [
+      'id',
+      'exceptional',
+      'recommended',
+      'meh',
+      'skip',
+      'total',
+      'gameId',
+    ],
+  });
+
   return Rating;
 };
