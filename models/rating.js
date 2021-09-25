@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsTo(models.Game, {
         foreignKey: 'gameId',
-        as: 'rating',
       });
     }
   }

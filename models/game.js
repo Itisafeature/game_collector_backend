@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.hasOne(models.Rating, {
         foreignKey: 'gameId',
+        as: 'rating',
       });
     }
   }
