@@ -11,9 +11,10 @@ module.exports = {
       title: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
       },
-      currentPrice: {
-        type: Sequelize.INTEGER,
+      image: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,

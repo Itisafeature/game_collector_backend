@@ -1,33 +1,35 @@
 'use strict';
 const { Model } = require('sequelize');
-const bcrypt = require('bcryptjs');
-
 module.exports = (sequelize, DataTypes) => {
-  class Game extends Model {
+  class Rating extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.hasOne(models.Rating, {
+      this.belongsTo(models.Game, {
         foreignKey: 'gameId',
+        as: 'rating',
       });
     }
   }
-  Game.init(
+  Rating.init(
     {
-      title: {
-        type: DataTypes.STRING,
+      exceptional: DataTypes.INTEGER,
+      recommended: DataTypes.INTEGER,
+      meh: DataTypes.INTEGER,
+      skip: DataTypes.INTEGER,
+      total: DataTypes.INTEGER,
+      gameId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-        unique: true,
       },
-      image: DataTypes.STRING,
     },
     {
       sequelize,
-      modelName: 'Game',
+      modelName: 'Rating',
     }
   );
-  return Game;
+  return Rating;
 };

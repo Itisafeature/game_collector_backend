@@ -1,25 +1,29 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('OwnedGames', {
+    await queryInterface.createTable('Ratings', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      title: {
-        type: Sequelize.STRING,
-        allowNull: false,
+      exceptional: {
+        type: Sequelize.INTEGER,
       },
-      purchasePrice: {
+      recommended: {
+        type: Sequelize.INTEGER,
+      },
+      meh: {
+        type: Sequelize.INTEGER,
+      },
+      skip: {
+        type: Sequelize.INTEGER,
+      },
+      total: {
         type: Sequelize.INTEGER,
       },
       gameId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
@@ -34,6 +38,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('OwnedGames');
+    await queryInterface.dropTable('Ratings');
   },
 };
