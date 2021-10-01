@@ -24,11 +24,17 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
       },
       image: DataTypes.STRING,
+      slug: DataTypes.STRING,
     },
     {
       sequelize,
       modelName: 'Game',
     }
   );
+
+  Game.addHook('beforeCreate', async (game, options) => {
+    game.slug = game.title.toLowerCase().replace(/\s+/g, '-');
+  });
+
   return Game;
 };
