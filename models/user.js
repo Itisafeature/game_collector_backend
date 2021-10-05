@@ -10,7 +10,14 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      this.belongsToMany(models.Game, {
+        through: models.WantedGame,
+        as: 'gamesWanted',
+      });
+      this.belongsToMany(models.Game, {
+        through: models.OwnedGame,
+        as: 'gamesOwned',
+      });
     }
   }
   User.init(
@@ -60,11 +67,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  User.addHook('beforeValidate', (user, options) => {
-    if (user.password !== options.passwordConfirmation) {
-      throw new AppError('Password Confirmation does not match Password', 400);
-    }
-  });
+  // User.addHook('beforeValidate', (user, options) => {
+  //   if (user.password !== options.passwordConfirmation) {
+  //     throw new AppError('Password Confirmation does not match Password', 400);
+  //   }
+  // });
 
   User.addHook('beforeCreate', async (user, options) => {
     const hashedPassword = await bcrypt.hash(user.password, 10);

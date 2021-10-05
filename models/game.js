@@ -14,6 +14,14 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'gameId',
         as: 'rating',
       });
+      this.belongsToMany(models.Game, {
+        through: models.WantedGame,
+        as: 'usersWhoWant',
+      });
+      this.belongsToMany(models.Game, {
+        through: models.OwnedGame,
+        as: 'usersWhoOwn',
+      });
     }
   }
   Game.init(

@@ -1,10 +1,18 @@
 'use strict';
 const axios = require('axios');
-const { Game, Rating } = require('../models');
+const { Game, Rating, User, OwnedGame, WantedGame } = require('../models');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    const user = await User.create({
+      username: 'newuser',
+      email: 'newmail@mail.com',
+      password: 'password',
+      passwordConfirm: 'password',
+    });
+
     let count = 1;
+
     while (count < 40) {
       const res = await axios.get(
         `https://api.rawg.io/api/games?exlude_additions=true&page=${count}&page_size=40&-rating&key=${process.env.RAWG_API_KEY}`
@@ -25,6 +33,10 @@ module.exports = {
           skip: game.ratings[3].count,
           total: game.ratings_count,
         });
+
+        count % 2 === 0
+          ? await WantedGame.create({ userId: user.id, gameId: createdGame.id })
+          : await OwnedGame.create({ userId: user.id, gameId: createdGame.id });
       }
       count++;
     }
