@@ -12,11 +12,13 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsToMany(models.Game, {
         through: models.WantedGame,
-        as: 'gamesWanted',
+        foreignKey: 'userId',
+        as: 'GamesWanted',
       });
       this.belongsToMany(models.Game, {
         through: models.OwnedGame,
-        as: 'gamesOwned',
+        foreignKey: 'userId',
+        as: 'GamesOwned',
       });
     }
   }

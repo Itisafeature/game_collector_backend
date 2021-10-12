@@ -14,13 +14,15 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'gameId',
         as: 'rating',
       });
-      this.belongsToMany(models.Game, {
+      this.belongsToMany(models.User, {
         through: models.WantedGame,
-        as: 'usersWhoWant',
+        foreignKey: 'gameId',
+        as: 'UsersWhoWant',
       });
-      this.belongsToMany(models.Game, {
+      this.belongsToMany(models.User, {
         through: models.OwnedGame,
-        as: 'usersWhoOwn',
+        foreignKey: 'gameId',
+        as: 'UsersWhoOwn',
       });
     }
   }

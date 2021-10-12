@@ -4,11 +4,16 @@ const { Game, Rating, User, OwnedGame, WantedGame } = require('../models');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    await User.destroy({ where: {} });
+    await WantedGame.destroy({ where: {} });
+    await OwnedGame.destroy({ where: {} });
+    await Game.destroy({ where: {} });
+    await Rating.destroy({ where: {} });
+
     const user = await User.create({
       username: 'newuser',
       email: 'newmail@mail.com',
       password: 'password',
-      passwordConfirm: 'password',
     });
 
     let count = 1;
@@ -19,6 +24,8 @@ module.exports = {
       );
 
       const gameData = res.data.results;
+
+      let evenOrOdd = 1;
 
       for (const game of gameData) {
         const createdGame = await Game.create({
@@ -35,8 +42,16 @@ module.exports = {
         });
 
         count % 2 === 0
-          ? await WantedGame.create({ userId: user.id, gameId: createdGame.id })
-          : await OwnedGame.create({ userId: user.id, gameId: createdGame.id });
+          ? await WantedGame.create({
+              userId: user.id,
+              gameId: createdGame.id,
+            })
+          : await OwnedGame.create({
+              userId: user.id,
+              gameId: createdGame.id,
+            });
+
+        evenOrOdd++;
       }
       count++;
     }
