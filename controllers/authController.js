@@ -16,23 +16,27 @@ const createAndAddToken = (user, res) => {
 };
 
 exports.verifyToken = errorWrapper(async (req, res, next) => {
-  const token = jwt.verify(
+  jwt.verify(
     req.cookies.access_token,
     process.env.JWT_SECRET,
-    err => {
+    (err, decoded) => {
       if (err) next(err);
+      req.userId = decoded.id;
     }
   );
   next();
 });
 
-const loginAndSendResponse = (res, statusCode, user) => {
+const loginAndSendResponse = async (res, statusCode, user, games) => {
   createAndAddToken(user, res);
   delete user.dataValues.password;
   delete user.dataValues.email;
   return res.status(statusCode).json({
     status: 'success',
-    data: user,
+    data: {
+      user,
+      games,
+    },
   });
 };
 
@@ -47,7 +51,8 @@ exports.createUser = errorWrapper(async (req, res, next) => {
   const user = await User.create(req.body.user, {
     passwordConfirmation: req.body.user.passwordConfirmation,
   });
-  loginAndSendResponse(res, 201, user);
+  const games = { ownedGames: [], wantedGames: [] };
+  loginAndSendResponse(res, 201, user, games);
 });
 
 exports.loginUser = errorWrapper(async (req, res, next) => {
@@ -55,10 +60,14 @@ exports.loginUser = errorWrapper(async (req, res, next) => {
   if (user) {
     const auth = await bcrypt.compare(req.body.user.password, user.password);
     if (auth) {
-      return loginAndSendResponse(res, 200, user);
+      const games = {
+        ownedGames: await user.getGamesOwned(),
+        wantedGames: await user.getGamesWanted(),
+      };
+      return loginAndSendResponse(res, 200, user, games);
     }
   }
-  next(new AppError('Invalid Username or Password', 401));
+  next(new AppError('Invalid Username or Password', 401)); // Error Won't work for problem with loading
 });
 
 exports.logoutUser = async (req, res, next) => {

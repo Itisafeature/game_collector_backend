@@ -1,5 +1,5 @@
 const errorWrapper = require('../utils/controllerErrorHandler');
-const { Game, Rating } = require('../models');
+const { User } = require('../models');
 
 exports.getGames = errorWrapper(async (req, res, next) => {
   const games = await Game.findAll({ include: ['rating'] });

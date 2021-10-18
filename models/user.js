@@ -69,11 +69,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  // User.addHook('beforeValidate', (user, options) => {
-  //   if (user.password !== options.passwordConfirmation) {
-  //     throw new AppError('Password Confirmation does not match Password', 400);
-  //   }
-  // });
+  User.addHook('beforeValidate', (user, options) => {
+    if (user.password !== options.passwordConfirmation) {
+      throw new AppError('Password Confirmation does not match Password', 400);
+    }
+  });
 
   User.addHook('beforeCreate', async (user, options) => {
     const hashedPassword = await bcrypt.hash(user.password, 10);
